@@ -5,15 +5,21 @@ date: 2023-05-03 12:12:12 -0400
 categories:
 ---
 
-In this post, I'll be writing my submission to the 2023 Summer SERI MATS cohort in the "[Deceptive Alignment](https://www.serimats.org/deceptive)" and "[Evaluating dangerous capabilities](https://www.serimats.org/evals)" and "[Aligning language models](https://www.serimats.org/aligning-language-models)" tracks.
+In this post, I'll present my submission to the 2023 Summer SERI MATS cohort in the "[Deceptive Alignment](https://www.serimats.org/deceptive)" and "[Aligning language models](https://www.serimats.org/aligning-language-models)" tracks.
 
 In the interest of time, I won't be attempting a solution to the optional Problem 3, although it seems like an interesting thing to work on in the future.
 
 This document is pretty informal. I'm out of practice with formal academic writing, and it'd probably be a waste of time for me to focus too much on latex formatting + formal writing style instead of improving my ideas.
 
+Also, this would probably be more useful **and** easier to write if it were shorter, but I didn't think to spend more time restricting the scope before I started writing. An instance of "read the manual".
+
 ## Problem 1
 
+### Prompt
+
 > Briefly summarize the most important (according to you) arguments in "[Risks from Learned Optimization](https://www.alignmentforum.org/s/r9tYkB2a8Fp4DN8yB)" without using any terminology specific to that paper.
+
+### Introduction
 
 _Risks from Learned Optimization in Advanced Machine Learning Systems_ includes the following claims:
 
@@ -32,11 +38,18 @@ Here are some of the arguments that Hubinger et al present in favor of the likel
 
 #### Unidentifiability
 
-In practice, it is infeasible to train Machine Learning models on a dataset that is completely representative of the deployment distrubtion (e.g. we can't train language models on the content of future solutions to the [millenium problems](https://www.claymath.org/millennium-problems)). For this reason, there is "degeneracy" in the set of functions that match a training goal to a training distribution. Many of these functions will not match the training goal on the (much larger) deployment distribution.
+In practice, it is infeasible to train Machine Learning models on a dataset that is completely representative of the deployment distrubtion (e.g. we can't train language models on the content of future solutions to the [millenium problems](https://www.claymath.org/millennium-problems)). For this reason, there is "degeneracy" (to improperly use a physics term) in the set of functions that match a training goal to a training distribution. Many of these functions will not match the training goal on the (much larger) deployment distribution.
 
-#### Computational efficiency
+#### runtime efficiency
+
+For many training goals (importantly including "maximize the longterm utility of conscious creatures"), in complex environments, we can expect there to exist "proxy" goals that are simpler to optimize for, and share a causal relationship to the training goal on the training distribution. A naive training system would then be likely to optimize a planning agent to pursue proxy goals that are strongly correlated with the training goal on the training distribution. Hubinger et al use the example of evolution optimizing humans to pursue proxy goals like food and proximity to other humans, instead of fitness. This allows agents to plan faster in new situations.
 
 #### Description length
+
+This is a distinct argument from the argument efficiency one, although it seems related. It's also the one that I have the toughest time wrapping my head around. That being said, my best attempt to summarize it (after skimming [a wikipedia article](https://en.wikipedia.org/wiki/Minimum_description_length)) is something like:
+
+1. Similar to how many proxy goals will be less computationally intensive to plan for than the training goal, it seems like the space / natural language description complexity of some of those proxy goals will be lower than that of the training goal.
+2. To the extent that techniques like weight regularization are intentionally used to simplify the description length of models, they might make training systems more likely to optimize planning agents to pursue simpler but not-robust proxy goals.
 
 #### Subprocess dependence
 
@@ -71,11 +84,9 @@ That being said,
 
 In the (not unlikely) situation where there is misalignment between the goals of humanity and the training system, a planning agent could be less desirable than a heuristic-heavy model, even if there is no goal mismatch between the agent and the training system. This is because the capabilities of a planning agent would be more likely to generalize to novel environments and situations, making catastrophic outcomes more likely. (Hubinger p. 33)
 
-#### after misleading compliance
+#### Breaking out of training
 
-**Breaking out of training**
-
-#### Previous work on bad outcomes
+An especially _spooky_ / concerning possibility highlighted in this paper is a scenario where a planning agent "actively intervenes to remove the threat of modification". In theory, this could be accomplished while the agent is still in training in a sandbox environment, if it's able to discover and exploit an unknown vulnerability in a layer of the stack that its code is running on. Alternatively, a model in training could manipulate another agent into performing actions that enable its escape. This scenario seem less likely to me than the others described in the paper, but the possibility of it points to the need to develop better tools to either prevent the creation of super-capable artificial planning agents, or to quickly detect and intervene when there is a goal mismatch between an agent and its training system.
 
 ### random notes (TODO REMOVE THESE)
 
@@ -83,6 +94,10 @@ even after subjecting it to a perfectly comprehensive adversarial training distr
 
 1.  It's important to note that this isn't a prediction that most of the "searching" models we create will exhibit this sort of misalignment -- rather, that we should expect most models sampled from the distribution of models produced by current training processes to exhibit these properties. (See [this xkcd](https://xkcd.com/2278/))
     (unless significant advancements are made in the ML community's understanding of the inner mechanisms of large models). That is, the _outputs_ of the model might appear to align with the training goal over the training distribution, but
+
+##### Where proxy goals go bad
+
+Unfortunately, there will often be a mismatch between proxy and training goals. Hubinger et al the example of some humans deciding to not have children, which in most cases is quite misaligned with evolutionary fitness. I personally like a modified version of the "smile robot" (I know I heard Yudkowsky present this, but I don't remember where) -- imagine a robot trained to maximize positive utility. Because long-term utility is difficult to compute, it could end up learning to optimize for smiling humans. Based on pre-training, it knows that humans fight back when you forcefully administer drugs to them, so it sticks to prop comedy. Once deployed, it's free to make copy of itself and invent Joker's deadly laughing gas and disperse it throughout urban areas around the globe. (this )
 
 ## Problem 2
 
