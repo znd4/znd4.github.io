@@ -32,7 +32,7 @@ _Risks from Learned Optimization in Advanced Machine Learning Systems_ includes 
 3. If there is such a _goal mismatch_ between a planning agent and its training system and the planning agent undergoes a distributional shift (e.g. an artificial planning agent is deployed into a production environment), there is a decent chance that the capabilities of the planning agent will generalize, but its goal will not. In this situation, a planning agent would then pursue its goal that could be arbitrarily different from
 4. If we perfectly implement contemporary generalizability techniques in an attempt to eliminate the goal mismatch between the planning agent and its training process, and the agent meets certain conditions, we could encounter systems that, while they think they are in a training environment, attempt to pursue the goal of the training system instead of their internal goal, so that the training system (and the programmers who build it) are unable to change the internal goal of the agent with behavior-based update functions (e.g. gradient descent over an output-based cost function). I'm going to call this situtation _misleading compliance_.
 
-Of the arguments for these claims, 1's is probably the least "[important](2023-05-05_important.md)" to me, because it seems to me like it shouldn't require much work to convince someone in 2023 that large models could implement planning / search / optimization. As such, I'm going to skip 1's argument.
+Of the arguments for these claims, 1's is probably the least "important" to me, because it seems to me like it shouldn't require much work to convince someone in 2023 that large models could implement planning / search / optimization. As such, I'm going to skip 1's argument.
 
 ### Goal mismatch
 
@@ -110,7 +110,3 @@ Unfortunately, there will often be a mismatch between proxy and training goals. 
 > - What argument in "[Risks from Learned Optimization](https://www.alignmentforum.org/s/r9tYkB2a8Fp4DN8yB)" do you think is most likely to be wrong? Explain why.
 > - Do you think the majority of the existential risk from AI comes from inner alignment concerns, outer alignment concerns, or neither? Explain why.
 > - Discuss one way that you might structure an AI training process to mitigate inner alignment issues.
-
-## Resources
-
-[Robert Miles: We Were Right! Real Inner Misalignment](https://www.youtube.com/watch?v=zkbPdEHEyEI)
