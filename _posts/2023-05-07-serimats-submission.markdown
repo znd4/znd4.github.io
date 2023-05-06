@@ -5,13 +5,7 @@ date: 2023-05-05 12:12:12 -0400
 categories: alignment
 ---
 
-In this post, I'll present my submission to the 2023 Summer SERI MATS cohort in the "[Deceptive Alignment](https://www.serimats.org/deceptive)" and "[Aligning language models](https://www.serimats.org/aligning-language-models)" tracks.
-
-In the interest of time, I won't be attempting a solution to the optional Problem 3, although it seems like an interesting thing to work on in the future.
-
-This document is pretty informal. I'm out of practice with formal academic writing, and it'd probably be a waste of time for me to focus too much on latex formatting + formal writing style instead of improving my ideas.
-
-Also, this would probably be more useful **and** easier to write if it were shorter, but I didn't think to spend more time restricting the scope before I started writing. An instance of "read the manual".
+In this post, I'll present part of my submission to the 2023 Summer SERI MATS cohort in the "[Deceptive Alignment](https://www.serimats.org/deceptive)" track.
 
 <!-- TODO - fill in citations -->
 
