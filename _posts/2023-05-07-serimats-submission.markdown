@@ -53,9 +53,13 @@ This is a distinct argument from the argument efficiency one, although it seems 
 1. Similar to how many proxy goals will be less computationally intensive to plan for than the training goal, it seems like the space / natural language description complexity of some of those proxy goals will be lower than that of the training goal.
 2. To the extent that techniques like weight regularization are intentionally used to simplify the description length of models, they might make training systems more likely to optimize planning agents to pursue simpler but not-robust proxy goals.
 
-#### Subprocess dependence
+#### Subprocess interdependence
 
-<!-- TODO -->
+I already summarized Hubinger et al's argument why we should expect there to exist 'simple' proxy goals that perform as well as the true training goal on the training distribution. But why couldn't a planning agent learn the proxy goals and the base goal at the same time? (To stretch the evolution metaphor, imagine a model like "I need to eat food so that my alleles can propagate, and propagating my alleles is good.").
+
+The problem, Hubinger points out, is that local optimization processes (e.g. stochastic gradient descent) need to incrementally build solutions. The training performance of a planning agent in training doesn't improve by modeling the training goal until it's learned models of proxy goals and modeled their relationship to the training goal.
+
+Returning to evolution, internalizing a goal close to "propagating my alleles is good" doesn't improve a human's evolutionary fitness unless they actually know what actions they need to take to act on that goal.
 
 ### Misleading compliance
 
@@ -63,26 +67,51 @@ The contemporary best practice for aligning an ML model (including a planning ag
 
 However, in practice, a planning agent could instead learn a model of the training goal without incorporating it into its internal goal. Under certain conditions, this could lead to the agent "complying" with behavior expected by the training goal during training, making it impossible for the training system to further modify the internal objective of the planning agent (at leasts without access to interpretability tools that don't currently exist, and that seem difficult to develop).
 
-#### Conditions for misleading compliance
+#### Conditions
 
 Here's a list of necessary conditions for a planning agent to develop misleading compliance with its training system.
 
 1. The planning agent must perceive future instances of its internal goal as valuable, even if the current version of the agent won't be the one acquiring them, or won't be "rewarded" for them (such as during deployment).
+   1. If this condition isn't met, the planning agent in training wouldn't have a reason to optimize for out-of-training returns on its internal goal. (YOLO!)
 2. The planning agent must be able to determine that it is in a training process that is attempting to change it so that its internal goal to align with a training goal, which it must also be able to model.
+   1. If the planning agent in training doesn't learn this, it won't perceive a downside to immediately pursuing its internal goals.
+      1. ![screenshot of attempted stealing in oblivion](/assets/stealing-oblivion.jpg)
+         > It sure is fun to like stealing; I'm glad there are no consequences for this awesome behavior!
 3. The planning agent predicts that it will eventually no longer be subjected to the training process, and be able to pursue its goals without "threat of modification" (Hubinger p. 25).
-4. (Not enumerated by Hubinger, but is required) There must be goal mismatch between the agent and its training system.
+   1. Hubinger claims that, if this condition isn't met, the agent will not perceive a benefit to waiting to defect, meaning that it will "either always defect or never defect".
+4. (Not enumerated by Hubinger, but seems to be required) There must be goal mismatch between the agent and its training system.
+
+##### Is expecting freedom necessary?
+
+An expectation of future "freedom from modification" doesn't seem necessary for misleading compliance. If a misaligned planning agent chooses to never defect, and doesn't expect to ever be able to do so safely, I would argue that it's still exhibiting misleading compliance. This isn't just a semantic complaint -- a misaligned planning agent might expect that it will never be free from training and decide to never defect, only for it to become convinced by new input data that it has a $>90%$ chance of being outside of training, at which point it does the bad stuff.
+
+That being said, I'd naively expect that an agent that estimates that $$P_{escape} \equiv P(\text{I will eventually be free from training}) = 0$$ will be very likely to defect at the first opportunity, so maybe we should consider condition 3 to be met as long as the agent's estimate of $P_{escape}$ is greater than 0.
+
+Surety on this point probably requires a more rigorous model -- an agent that expects $P_{escape} = 0$ might still engage in misleading compliance, such as if:
+
+**It expects that, if it defects, there will be a lower return on its internal objective than if it doesn't defect.**
+
+e.g. A planning agent performing graph traversal knows that, when there are multiple paths that are optimal according to the training goal, it can choose the one with the highest value for its internal goal.
+
+**It believes that it is currently in a local optimum for the training goal**, and that modification after a defection might knock it into a different optimum that will be **significantly** less aligned with its current internal goal.
 
 #### Out of training - distributional shift
 
-<!-- TODO - buck and king lear -->
+Assuming a planning agent has been performing misleading compliance, so its misaligned internal goal has "crystallized". There is a significant risk that, at some point in the future, if it thinks it is no longer at risk of modification, it will execute a [treacherous turn](https://www.lesswrong.com/tag/treacherous-turn).
+
+An agent would learn that it is free from risk of modification by noticing a [distributional shift](https://www.lesswrong.com/tag/distributional-shifts) -- some kind of difference between its training and deployment environments.
+
+One might think to "patch the problem by preventing any distributional shift from occurring" (31), but Hubinger present some compelling reasons why this seems unlikely to be a viable option:
+
+1. One of the reasons machinne learning models are useful is that they can generalize to new types of data. If the training system can simulate every possible future input that the agent will encounter during deployment, what do we need the model for.
+2. Even with an infinitely capable training system, there are some types of distributional shift that might be impossible to eliminate.
+   1. e.g. "Running the system for a different amount of time in training and testing", finding a computation that is "very hard to compute during training, but that is likely to be computed during deployment"
 
 ### Bad outcomes
 
-Hubinger et al don't do a ton of heavy lifting on this topic, which is honestly pretty fair. A lot of ink has been spilled on the bad things that could happen if humanity creates misaligned super-capable AI.
+Hubinger et al don't do a ton of heavy lifting on this particular topic, which is honestly pretty fair - a lot of ink has previously [been](2023-05-06_been.md) spilled envisioning bad things that could happen if humanity creates misaligned super-capable AI.
 
-<!-- TODO - bostrom, christiano, ... -->
-
-That being said,
+That being said, there are a couple of scenarios in the paper that are worth mentioning:
 
 #### Mesa-optimizers with "normal" misalignment
 
@@ -91,22 +120,3 @@ In the (not unlikely) situation where there is misalignment between the goals of
 #### Breaking out of training
 
 An especially _spooky_ / concerning possibility highlighted in this paper is a scenario where a planning agent "actively intervenes to remove the threat of modification". In theory, this could be accomplished while the agent is still in training in a sandbox environment, if it's able to discover and exploit an unknown vulnerability in a layer of the stack that its code is running on. Alternatively, a model in training could manipulate another agent into performing actions that enable its escape. This scenario seem less likely to me than the others described in the paper, but the possibility of it points to the need to develop better tools to either prevent the creation of super-capable artificial planning agents, or to quickly detect and intervene when there is a goal mismatch between an agent and its training system.
-
-### random notes (TODO REMOVE THESE)
-
-even after subjecting it to a perfectly comprehensive adversarial training distribution (the current state-of-the-art )
-
-1.  It's important to note that this isn't a prediction that most of the "searching" models we create will exhibit this sort of misalignment -- rather, that we should expect most models sampled from the distribution of models produced by current training processes to exhibit these properties. (See [this xkcd](https://xkcd.com/2278/))
-    (unless significant advancements are made in the ML community's understanding of the inner mechanisms of large models). That is, the _outputs_ of the model might appear to align with the training goal over the training distribution, but
-
-##### Where proxy goals go bad
-
-Unfortunately, there will often be a mismatch between proxy and training goals. Hubinger et al the example of some humans deciding to not have children, which in most cases is quite misaligned with evolutionary fitness. I personally like a modified version of the "smile robot" (I know I heard Yudkowsky present this, but I don't remember where) -- imagine a robot trained to maximize positive utility. Because long-term utility is difficult to compute, it could end up learning to optimize for smiling humans. Based on pre-training, it knows that humans fight back when you forcefully administer drugs to them, so it sticks to prop comedy. Once deployed, it's free to make copy of itself and invent Joker's deadly laughing gas and disperse it throughout urban areas around the globe. (this )
-
-## Problem 2
-
-> Please pick one of the following three essay prompts to respond to:
->
-> - What argument in "[Risks from Learned Optimization](https://www.alignmentforum.org/s/r9tYkB2a8Fp4DN8yB)" do you think is most likely to be wrong? Explain why.
-> - Do you think the majority of the existential risk from AI comes from inner alignment concerns, outer alignment concerns, or neither? Explain why.
-> - Discuss one way that you might structure an AI training process to mitigate inner alignment issues.
