@@ -13,7 +13,6 @@ In this post, I'll present part of my submissions to the "[Deceptive Alignment](
 
 The core concepts considered in the paper will likely be looked upon favorably by future AI researchers, but I will argue that, partially due to "grey swan" events that occurred shortly after its publication, [Risks from Learned Optimization](https://www.alignmentforum.org/s/r9tYkB2a8Fp4DN8yB), in its discussions of future research agendas, underestimates the possibility for behavioral research into then contemporary and near-future deep learninng models to lead the way, and generate valuable insights prior to significant advances in interpretability.
 Similarly, although Hubinger et al highlight uncertainties about the occurrence of mesa-optimizers and our ability to prevent them, due to both the previously mentioned surprises and their paper's lack of consideration AI governance concerns, Hubinger et al provide an overly certain conditional endorsement of research into preventing mesa-optimization.
-That being said, the lines of work endorsed in the paper -- building a "formal specification of optimization", developing interpretability techniques for understanding when an ML system is performing optimization, and considering the applicability of techniques from inverse reinforcement learning, among others -- will likely form the core of any solution to the problem of pseudo-alignment in mesa-optimizers.
 
 ### GPT-2 might have been a meta-optimizer. GPT-4 probably is
 
@@ -73,9 +72,7 @@ Additionally, the proposed environment could be significantly simpler than the r
 
 ### Risks
 
-Proposals like the one above do carry risks (besides the obvious direct risks involved with gain-of-function research). If we put a ton of energy into these sorts of alignment evaluation studies, it's possible that we could become complacent when we get negative results. Tripping an alarm with one of these evaluations could be hugely valuable -- demonstrating deceptive alignment, or catching a model successfully working out the steps to copy itself in a sandbox -- but the spectre of deceptive alignment should always be in the back of our minds when we don't find anything. Absence of evidence is not evidence of abascence.
-
-I've been thinking about an imperfect analogy: We don't want to be like the doctors before [stethoscopes](https://en.wikipedia.org/wiki/Stethoscope). Basically, never forget our ignorance.
+Proposals like the one above do carry risks (besides the obvious direct risks involved with gain-of-function research). If we put a ton of energy into these sorts of alignment evaluation studies, it's possible that we could become complacent when we get negative results. Tripping an alarm with one of these evaluations could be hugely valuable -- demonstrating deceptive alignment, or catching a model successfully working out the steps to copy itself in a sandbox -- but the spectre of deceptive alignment should always be in the back of our minds when we don't find anything. Absence of evidence is not evidence of absence.
 
 ## Quotes
 
