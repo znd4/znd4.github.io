@@ -24,14 +24,22 @@ description: >- # this means to ignore newlines until "baseurl:"
   Just trying to save the world. no pressure
 baseurl: "" # the subpath of your site, e.g. /blog
 url: https://znd4.github.io # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: zdog234
-github_username: znd4
 
 # Build settings
-theme: minima
+remote_theme: jekyll/minima
 plugins:
   - jekyll-feed
   - jekyll-spaceship
+  - jekyll-remote-theme
+
+minima:
+  skin: dark
+  social_links:
+    - platform: cal.com
+      link: https://cal.com/zanedufour
+      title: Schedule a chat!
+    - platform: github
+      link: https://github.com/znd4
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
